@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <div class="banner">
+    <h2>Data Protector - Sesiones Antiguas en VTL</h2>
+    <p>Servidor -{{ servidor }}-</p>
+    <p>Informacion recabada: {{ fecha }} </p>
+    <p>Contenido guardado en VTL que todavia no ha sido descargado a cinta o con expiracion demasiado larga.</p>
+    <p>s/d: sin datos. Probablemente sea un job de copia</p>
+    <p>(Recuerde que puede clickear en las cabeceras de las columnas para ordenarlas)</p>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <h3>Sesiones acumuladas:</h3>
+    Para tener idea de cuales fueron los trabajos fallidos.<br>
+    Mas abajo encuentre las sesiones a copiar individualizadas.<br>
+    {{sesiones|length}} Sesiones problematicas
+    <table style="float:center" id="tableone" border="1">
+        <tr class="encabezados">
+            <th onclick="sortTable(0)">Sesion ID</th>
+            <th onclick="sortTable(1)">Job</th>
+            <th onclick="sortTable(2)">Recursos con problema</th>
+            <th onclick="sortTable(3)">Acumulado de bytes</th>
+            <th onclick="sortTable(3)">Cinta</th>
+        </tr>
+
+        {% for key,value in sesiones.iteritems() %}
+        <tr class="{{ loop.cycle('full','incr') }}">
+            <td>{{ key }} </td>
+            <td>{{ value[0] }} </td>
+            <td>{{ value[1] }} </td>
+            <td>{{ value[2] }} </td>
+            <td>{{ value[3] }} </td>
+            <!-- fin de registro-->
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+{% block script %}
+function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("tableone");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "desc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "desc") {
+                    dir = "asc";
+                    switching = true;
+                }
+            }
+        }
+    }
+{% endblock %}

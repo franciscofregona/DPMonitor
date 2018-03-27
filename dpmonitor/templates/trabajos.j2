@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <script src="index.js"></script>
+    <div class="banner">
+    <h2>Data Protector - Info de jobs</h2>
+    <p>Informacion recabada: {{ fecha }} </p>
+    <p>(Recuerde que puede clickear en las cabeceras de las columnas para ordenarlas)</p>
+    </div>
+
+    <div class="topnav" id="myTopnav">
+    <a href="#tableone">Trabajos Programados</a>
+    <a href="#tabletwo">Trabajos No Programados</a>
+    </div> 
+    <!-- <div class="topnav" id="myBotnav"> 
+    <a href="#tp">asdos</a>
+    <a href="#tnp">Trasdadaaddadsdaados</a>
+    </div> -->
+{% endblock %}
+
+{% block contenido %}
+{# <input id="btnProgramados" type="button" value="Programados"/><input id="btnNoProgramados" type="button" value="No Programados"/> 
+<!-- input id="btnHide" type="button" value="Toggle columna x"/--><input id="btnHideVTL" type="button" value="Toggle VTLs"/>#}
+<!-- tabla de programados primero -->
+    {{trabajosp|length}} Trabajos programados
+    <table id="tableone" border="1">
+        <tr class="encabezados">
+            <th onclick="sortTable(0)">Job</th>
+            <th onclick="sortTable(1)">Inicio Ultima Ej.</th>
+            <th onclick="sortTable(2)">Fin Ultima Ej.</th>
+            <th onclick="sortTable(3)">Dur. Ultima Ej.</th>
+            <th onclick="sortTable(4)">Prox. Ej.</th>
+            <th onclick="sortTable(5)">Tipo</th>
+            <th onclick="sortTable(6)">LTO4/5/VTL</th>
+            <th onclick="sortTable(7)">VTL5-1</th>
+            <th onclick="sortTable(8)">VTL5-2</th>
+            <th onclick="sortTable(9)">VTL5-3</th>
+            <th onclick="sortTable(10)">VTL5-4</th>
+            <th onclick="sortTable(11)">VTL5-5</th>
+            <th onclick="sortTable(12)">VTL5-6</th>
+            <th onclick="sortTable(13)">VTL5-7</th>
+            <th onclick="sortTable(14)">VTL5-8</th>
+            <th onclick="sortTable(15)">VTL5-9</th>
+            <th onclick="sortTable(16)">VTL5-10</th>
+            <th onclick="sortTable(17)">drive4-1</th>
+            <th onclick="sortTable(18)">drive4-2</th>
+            <th onclick="sortTable(19)">drive5-3</th>
+            <th onclick="sortTable(20)">drive5-4</th>
+            <th onclick="sortTable(21)">drive5-5</th>
+            <th onclick="sortTable(22)">drive5-6</th>
+        </tr>
+
+        {% for key,value in trabajosp.iteritems() %}
+            <!-- cabecera de registro. seteo de color segun tipo de job-->
+            {% if value.mode == "full" %}
+                <tr class="full" >
+            {% elif value.mode == "incr" %}
+                <tr class="incr" >
+            {% else %}
+                <tr class="copy" >
+            {% endif %}
+            <!-- cabeza de primer columna: Trabajo-->
+                <td>{{ value.specification }} </td>
+            <!-- Inicio de la ultima ejecucion-->
+                <td>{{ value.ultExecStart }} </td>
+            <!-- Fin de la ultima ejecucion-->
+                <td>{{ value.ultExecEnd }} </td>
+            <!-- Duracion de la ultima ejecucion-->
+                <td>{{ value.ultDur }} </td>
+            <!-- Fecha Prox Inicio-->
+                <td>{{ value.tiempo }} </td>
+            <!-- Hora fin (estimada)
+                <td>s/d</td>-->
+            <!-- Duracion (estimada)
+                <td>s/d</td> -->
+            <!-- tipo de job full/incr -->
+                <td>{{value.mode}} </td>
+            <!-- (LTO4/5/VTL) -->
+                <td>s/d</td>
+            {% if "VLTO5-1" in value.devices %} <td bgcolor="#480000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-2" in value.devices %} <td bgcolor="#500000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-3" in value.devices %} <td bgcolor="#580000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-4" in value.devices %} <td bgcolor="#600000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-5" in value.devices %} <td bgcolor="#680000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-6" in value.devices %} <td bgcolor="#700000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-7" in value.devices %} <td bgcolor="#780000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-8" in value.devices %} <td bgcolor="#800000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-9" in value.devices %} <td bgcolor="#880000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-10" in value.devices %} <td bgcolor="#900000"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD4_1" in value.devices %} <td bgcolor="#006000"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD4_2" in value.devices %} <td bgcolor="#006800"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_3" in value.devices %} <td bgcolor="#000060"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_4" in value.devices %} <td bgcolor="#000068"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_5" in value.devices %} <td bgcolor="#000080"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_6" in value.devices %} <td bgcolor="#000088"> </td> {% else %} <td></td> {%endif%}
+            <!-- fin de registro-->
+            </tr>
+            {% endfor %}
+    </table>
+    <!-- tabla de no programados despues -->
+    {{trabajosn|length}} Trabajos no programados
+    <table id="tabletwo" border="1">
+        <tr class="encabezados">
+            <th onclick="sortTablen(0)">Job</th>
+            <th onclick="sortTablen(1)">Tipo</th>
+            <th onclick="sortTablen(2)">LTO4/5/VTL</th>
+            <th onclick="sortTablen(3)">VTL5-1</th>
+            <th onclick="sortTablen(4)">VTL5-2</th>
+            <th onclick="sortTablen(5)">VTL5-3</th>
+            <th onclick="sortTablen(6)">VTL5-4</th>
+            <th onclick="sortTablen(7)">VTL5-5</th>
+            <th onclick="sortTablen(8)">VTL5-6</th>
+            <th onclick="sortTablen(9)">VTL5-7</th>
+            <th onclick="sortTablen(10)">VTL5-8</th>
+            <th onclick="sortTablen(11)">VTL5-9</th>
+            <th onclick="sortTablen(12)">VTL5-10</th>
+            <th onclick="sortTablen(13)">drive4-1</th>
+            <th onclick="sortTablen(14)">drive4-2</th>
+            <th onclick="sortTablen(15)">drive5-3</th>
+            <th onclick="sortTablen(16)">drive5-4</th>
+            <th onclick="sortTablen(17)">drive5-5</th>
+            <th onclick="sortTablen(18)">drive5-6</th>
+        </tr>
+
+        {% for key,value in trabajosn.iteritems() %}
+            <!-- cabecera de registro. seteo de color segun tipo de job-->
+            {% if value.mode == "full" %}
+                <tr class="full" >
+            {% elif value.mode == "incr" %}
+                <tr class="incr" >
+            {% else %}
+                <tr class="copy" >
+            {% endif %}
+            <!-- cabeza de primer columna: Trabajo-->
+                <td>{{ value.specification }} </td>
+            <!-- tipo de job full/incr -->
+                <td>{{value.mode}} </td>
+            <!-- (LTO4/5/VTL) -->
+                <td>s/d</td>
+            {% if "VLTO5-1" in value.devices %} <td bgcolor="#480000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-2" in value.devices %} <td bgcolor="#500000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-3" in value.devices %} <td bgcolor="#580000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-4" in value.devices %} <td bgcolor="#600000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-5" in value.devices %} <td bgcolor="#680000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-6" in value.devices %} <td bgcolor="#700000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-7" in value.devices %} <td bgcolor="#780000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-8" in value.devices %} <td bgcolor="#800000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-9" in value.devices %} <td bgcolor="#880000"> </td> {% else %} <td></td> {%endif%}
+            {% if "VLTO5-10" in value.devices %} <td bgcolor="#900000"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD4_1" in value.devices %} <td bgcolor="#006000"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD4_2" in value.devices %} <td bgcolor="#006800"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_3" in value.devices %} <td bgcolor="#000060"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_4" in value.devices %} <td bgcolor="#000068"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_5" in value.devices %} <td bgcolor="#000080"> </td> {% else %} <td></td> {%endif%}
+            {% if "TD5_6" in value.devices %} <td bgcolor="#000088"> </td> {% else %} <td></td> {%endif%}
+            <!-- fin de registro-->
+            </tr>
+            {% endfor %}
+{% endblock %}
+
+{% block script %}
+function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("tableone");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "desc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "desc") {
+                    dir = "asc";
+                    switching = true;
+                }
+            }
+        }
+    }
+function sortTablen(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("tabletwo");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "desc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "desc") {
+                    dir = "asc";
+                    switching = true;
+                }
+            }
+        }
+    }
+{% endblock %}

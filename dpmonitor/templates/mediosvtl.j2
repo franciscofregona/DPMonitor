@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <div class="banner">
+    <h2>Data Protector - Info de jobs</h2>
+    <p>Informacion recabada: {#{ fecha }#} </p>
+    <p>(Recuerde que puede clickear en las cabeceras de las columnas para ordenarlas)</p>
+    </div>
+
+    <div class="topnav" id="myTopnav">
+    <a href="#tableone">Medios</a>
+    <a href="#tabletwo">Medios y sesiones</a>
+    </div> 
+
+{% endblock %}
+
+{% block contenido %}
+<!-- tabla -->
+    {{medios|length}} Medios en el pool VTL Backup
+    <table id="tableone" border="1">
+        <tr class="encabezados">
+            <th onclick="sortTable(0)">Cinta</th>
+            <th onclick="sortTableD(1)">Nro de objetos</th>
+            <th onclick="sortTableD(2)">Bytes Permanentes</th>
+            <th onclick="sortTableD(3)">Bytes Protegidos</th>
+            <th onclick="sortTableD(4)">Bytes Expirados</th>
+            <th onclick="sortTableD(5)">Otros (missing media)</th></tr>
+
+        {% for k in medios %}
+            <tr class="{{ loop.cycle('full','incr') }}" >
+                <td>{{ k[0] }}</td>
+                <td>{{ k[1] }}</td>
+                <td>{{ k[2] }}</td>
+                <td>{{ k[3] }}</td>
+                <td>{{ k[4] }}</td>
+                <td>{{ k[5] }}</td></tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block script %}
+function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("tableone");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "desc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "desc") {
+                    dir = "asc";
+                    switching = true;
+                }
+            }
+        }
+    }
+function sortTableD(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("tableone");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "desc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:
+                castear a int aqui*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if ((+x) > (+y)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                } else if (dir == "desc") {
+                    if ((+x) < (+y)) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch= true;
+                    break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "desc") {
+                    dir = "asc";
+                    switching = true;
+                }
+            }
+        }
+    }
+{% endblock %}

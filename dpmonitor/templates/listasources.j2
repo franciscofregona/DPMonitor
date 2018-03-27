@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <div class="banner">
+    <h2>Data Protector - Info de sources</h2>
+    <p>Esto es lo que se copia de manera recurrente, por trabajo de Data Protect y por servidor.</p>
+    <p>Si se portan bien tal vez pueda separarlo por cliente.</p>
+    <p>Informacion recabada: <strong>{{ fecha }}</strong> </p>
+    <p>Servidor: <strong>{{ servidor }}</strong> </p>
+    <p>La configuracion de este listado se encuentra alojada en <em>10.1.4.74/var/www/flask/dpmonitor/listasources.py</em></p>
+    </div>
+
+    <!-- <div class="topnav" id="myTopnav">
+    <a href="#tableone">Medios</a>
+    <a href="#tabletwo">Medios y sesiones</a>
+    </div>  -->
+
+{% endblock %}
+
+{% block contenido %}
+<!-- tabla -->
+    {{datalist|length}} Trabajos en este listado
+    <table id="tableone" border="1">
+        <tr class="encabezados">
+            <th onclick="sortTable(0)">Job</th>
+            <th onclick="sortTableD(1)">Servidor</th>
+        {% for key in datalist.items() %}
+            <tr class="{{ loop.cycle('full','incr') }}" >
+                <td>{{key[0]}}</td>
+                <td> {%for s in key[1] %}
+
+                    {%if s[0] != "HOST"%}
+
+                        <p><strong>{{s[2]}}</strong></p>
+                        <p>Particion: {{s[3]}}</p>
+                        {% if s[4] is defined %}
+                        <p>Paths:</p>
+                         <ul>
+                            {% for t in s[4] %}
+                                {% if t != "-trees" %}
+                                <li>{{t}}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% if s[5] is defined %}
+                        <p>Excludes:</p>
+                         <ul>
+                            {% for t in s[5] %}
+                                {% if t != "-exclude" %}
+                                <li>{{t}}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    {% else %}
+                        <p><strong>{{s[2]}}</strong></p>
+                        
+                        {% if s[3] is defined %}
+                        <p>Paths:</p>
+                         <ul>
+                            {% for t in s[3] %}
+                                {% if t != "-trees" %}
+                                <li>{{t}}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% if s[4] is defined %}
+                        <p>Excludes:</p>
+                         <ul>
+                            {% for t in s[4] %}
+                                {% if t != "-exclude" %}
+                                <li>{{t}}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    {% endif %}
+
+
+                    {% endfor %}
+
+                </td>
+
+</tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
